@@ -29,7 +29,7 @@ jenkins_cli() {
 # kept for reference
 get_node_secret() {
     jenkins_cli groovy = \
-        <<< "println jenkins.model.Jenkins.instance.nodesObject.getNode('$JENKINS_HOST')?.computer?.jnlpMac"
+        <<< "println jenkins.model.Jenkins.instance.nodesObject.getNode('$JENKINS_SLAVE_NAME')?.computer?.jnlpMac"
 }
 
 which curl &>/dev/null || {
