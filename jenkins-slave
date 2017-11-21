@@ -1,0 +1,76 @@
+#!/bin/bash -e
+#
+DOWNLOAD_DIR=/usr/share/jenkins
+
+DOCKER_GROUP=${DOCKER_GROUP:-docker}
+DOCKER_SOCKET="${DOCKER_SOCKET:-/var/run/docker.sock}"
+
+JENKINS_HOME=${JENKINS_HOME:-/var/jenkins_home}
+JENKINS_USER=${JENKINS_USER:-jenkins}
+
+JENKINS_SLAVE_NAME=${JENKINS_SLAVE_NAME:-$HOSTNAME}
+JENKINS_SLAVE_NUM_EXECUTORS=${JENKINS_SLAVE_NUM_EXECUTORS:-1}
+JENKINS_SLAVE_REMOTE_FS="$JENKINS_HOME"
+
+download_slave_jar() {
+    curl -Ssfo "$DOWNLOAD_DIR/slave.jar" $JENKINS_HOST/jnlpJars/slave.jar
+}
+
+download_cli_jar() {
+    curl -Ssfo "$DOWNLOAD_DIR/cli.jar" $JENKINS_HOST/jnlpJars/jenkins-cli.jar
+}
+
+# a wrapper for jenkins_cli utility
+jenkins_cli() {
+    java -jar "$DOWNLOAD_DIR/cli.jar" -s "$JENKINS_HOST" -auth "$JENKINS_AUTH" "$@"
+}
+
+# not really used, we use 'jnlpCredentials' instead
+# kept for reference
+get_node_secret() {
+    jenkins_cli groovy = \
+        <<< "println jenkins.model.Jenkins.instance.nodesObject.getNode('$JENKINS_HOST')?.computer?.jnlpMac"
+}
+
+which curl &>/dev/null || {
+    echo "please install curl"
+    exit 1
+}
+
+[ -z "$JENKINS_HOST" -o -z "$JENKINS_AUTH" ] && {
+    echo "please set both JENKINS_HOST and JENKINS_AUTH env. variables"
+    echo "example:"
+    echo "  JENKINS_AUTH=user:password"
+    echo "  JENKINS_HOST=http://localhost:8080"
+    exit 1
+}
+
+# download required jars
+mkdir -p "$DOWNLOAD_DIR"
+download_slave_jar
+download_cli_jar
+
+# if docker socket provided, then
+# allow docker cli to run as jenkins user
+[ -S "$DOCKER_SOCKET" ] && {
+    DOCKER_GID=$(stat -c '%g' "$DOCKER_SOCKET")
+    groupadd -for -g $DOCKER_GID $DOCKER_GROUP
+    usermod -aG $DOCKER_GROUP $JENKINS_USER
+}
+
+# make sure to delete node on exit
+trap 'jenkins_cli delete-node "$JENKINS_SLAVE_NAME" || true' EXIT
+
+# create node, unless it's already exists
+jenkins_cli get-node "$JENKINS_SLAVE_NAME" &>/dev/null || {
+    CONFIG="<slave><remoteFS>$JENKINS_SLAVE_REMOTE_FS</remoteFS><numExecutors>$JENKINS_SLAVE_NUM_EXECUTORS</numExecutors><launcher class='hudson.slaves.JNLPLauncher' /></slave>"
+    jenkins_cli create-node "$JENKINS_SLAVE_NAME" <<< "$CONFIG"
+}
+
+# run slave
+export HOME="$(echo ~$JENKINS_USER)"
+su $JENKINS_USER \
+    -mc "java $JAVA_OPTS -jar '$DOWNLOAD_DIR/slave.jar' -jnlpCredentials '$JENKINS_AUTH' -jnlpUrl '$JENKINS_HOST/computer/$JENKINS_SLAVE_NAME/slave-agent.jnlp'"
+
+# exit gracefully
+exit 0
