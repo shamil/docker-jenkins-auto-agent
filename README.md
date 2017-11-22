@@ -21,11 +21,28 @@ less used and can keep the defaults
 
 ***
 
+**Required permissions**
+
+The image should be used in trusted environment, even so the permissions for the user that will be used to register the slaves should be restricted.
+
+> **DO NOT USE ADMIN USER**
+
+Therefore, in order to be able to self register to the master, a user with relevant permissions must be created.
+
+The required permissions are:
+
+- `Overall/Read`
+- `Agent/Connect`
+- `Agent/Create`
+- `Agent/Delete`
+
+***
+
 **Running**
 
 when running without any env variables:
 
-```
+```sh
 $ docker run --rm simenduev/jenkins-auto-slave
 please set both JENKINS_URL and JENKINS_AUTH env. variables
 example:
@@ -35,7 +52,7 @@ JENKINS_URL=http://localhost:8080
 
 the basic working command:
 
-```
+```sh
 $ docker run -d \
     --net host \
     -e JENKINS_URL=http://jenkins.internal.domain:8080 \
@@ -44,18 +61,18 @@ $ docker run -d \
     simenduev/jenkins-auto-slave
 ```
 
-> NOTE: mounting of `/var/jenkins_home` volume is required in order for agent to be able to build jobs.
+> Mounting of `/var/jenkins_home` volume is required in order for agent to be able to build jobs.
 
-below command will also permit the slave to use docker commands:
+below command will also permit the slave run docker commands:
 
-```shell
+```sh
 $ docker run -d \
     --net host \
     -e JENKINS_URL=http://jenkins.internal.domain:8080 \
     -e JENKINS_AUTH=registrator:1234567890123456789012  \
     -v /any/path/you/like:/var/jenkins_home \
     -v /run/docker.sock:/run/docker.sock \
-    -v /usr/bin/docker:/usr/bin/docker
+    -v /usr/bin/docker:/usr/bin/docker \
     simenduev/jenkins-auto-slave
 ```
 
