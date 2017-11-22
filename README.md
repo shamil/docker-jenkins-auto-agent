@@ -17,7 +17,7 @@ less used and can keep the defaults
 
 - `DOCKER_GROUP` the docker group name, should be same as the docker's host group (defaults to `docker`)
 - `DOCKER_SOCKET` the docker socket location (default is `/var/run/docker.sock`)
-
+- `JAVA_OPTS` pass java options to the `slave.jar` process (default is not set)
 
 ***
 
