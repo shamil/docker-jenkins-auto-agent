@@ -13,16 +13,16 @@ JENKINS_SLAVE_NUM_EXECUTORS=${JENKINS_SLAVE_NUM_EXECUTORS:-1}
 JENKINS_SLAVE_REMOTE_FS="$JENKINS_HOME"
 
 download_slave_jar() {
-    curl -Ssfo "$DOWNLOAD_DIR/slave.jar" $JENKINS_HOST/jnlpJars/slave.jar
+    curl -Ssfo "$DOWNLOAD_DIR/slave.jar" $JENKINS_URL/jnlpJars/slave.jar
 }
 
 download_cli_jar() {
-    curl -Ssfo "$DOWNLOAD_DIR/cli.jar" $JENKINS_HOST/jnlpJars/jenkins-cli.jar
+    curl -Ssfo "$DOWNLOAD_DIR/cli.jar" $JENKINS_URL/jnlpJars/jenkins-cli.jar
 }
 
 # a wrapper for jenkins_cli utility
 jenkins_cli() {
-    java -jar "$DOWNLOAD_DIR/cli.jar" -s "$JENKINS_HOST" -auth "$JENKINS_AUTH" "$@"
+    java -jar "$DOWNLOAD_DIR/cli.jar" -auth "$JENKINS_AUTH" "$@"
 }
 
 # not really used, we use 'jnlpCredentials' instead
@@ -37,11 +37,11 @@ which curl &>/dev/null || {
     exit 1
 }
 
-[ -z "$JENKINS_HOST" -o -z "$JENKINS_AUTH" ] && {
-    echo "please set both JENKINS_HOST and JENKINS_AUTH env. variables"
+[ -z "$JENKINS_URL" -o -z "$JENKINS_AUTH" ] && {
+    echo "please set both JENKINS_URL and JENKINS_AUTH env. variables"
     echo "example:"
     echo "  JENKINS_AUTH=user:password"
-    echo "  JENKINS_HOST=http://localhost:8080"
+    echo "  JENKINS_URL=http://localhost:8080"
     exit 1
 }
 
@@ -69,7 +69,7 @@ jenkins_cli get-node "$JENKINS_SLAVE_NAME" &>/dev/null || {
 
 # run slave
 su $JENKINS_USER - -c \
-    "java $JAVA_OPTS -jar '$DOWNLOAD_DIR/slave.jar' -jnlpCredentials '$JENKINS_AUTH' -jnlpUrl '$JENKINS_HOST/computer/$JENKINS_SLAVE_NAME/slave-agent.jnlp'"
+    "java $JAVA_OPTS -jar '$DOWNLOAD_DIR/slave.jar' -jnlpCredentials '$JENKINS_AUTH' -jnlpUrl '$JENKINS_URL/computer/$JENKINS_SLAVE_NAME/slave-agent.jnlp'"
 
 # exit gracefully
 exit 0
