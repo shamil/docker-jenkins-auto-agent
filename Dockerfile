@@ -11,7 +11,7 @@ ENV JENKINS_HOME=/var/jenkins_home \
     JENKINS_USER=${user}
 
 RUN apt-get update \
-    && apt-get install -y curl dumb-init git libltdl7 \
+    && apt-get install -y --no-install-recommends curl dumb-init git libltdl7 \
     && rm -rf /var/lib/apt/lists/* \
     \
     # Jenkins is run with user `jenkins`, uid = 1000
