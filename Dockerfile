@@ -11,14 +11,18 @@ ENV JENKINS_HOME=/var/jenkins_home \
     JENKINS_USER=${user}
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends curl dumb-init git libltdl7 \
+    && apt-get install -y --no-install-recommends curl dumb-init git libltdl7 openssh-client \
     && rm -rf /var/lib/apt/lists/* \
     \
     # Jenkins is run with user `jenkins`, uid = 1000
     # If you bind mount a volume from the host or a data container,
     # ensure you use the same uid
     && groupadd -g ${gid} ${group} \
-    && useradd -d "$JENKINS_HOME" -u ${uid} -g ${gid} -m -s /bin/bash ${user}
+    && useradd -d "$JENKINS_HOME" -u ${uid} -g ${gid} -m -s /bin/bash ${user} \
+    \
+    # Tweak global SSH client configuration
+    && sed -i '/^Host \*/a \ \ \ \ ServerAliveInterval 30' /etc/ssh/ssh_config \
+    && sed -i '/^Host \*/a \ \ \ \ StrictHostKeyChecking no' /etc/ssh/ssh_config
 
 # Jenkins home directory is a volume, so configuration and build history
 # can be persisted and survive image upgrades
