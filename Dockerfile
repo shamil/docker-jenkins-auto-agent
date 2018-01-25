@@ -6,6 +6,7 @@ ARG user=jenkins
 ARG group=jenkins
 ARG uid=1000
 ARG gid=1000
+ARG git_lfs_version=2.3.4
 
 ENV JENKINS_HOME=/var/jenkins_home \
     JENKINS_USER=${user}
@@ -13,6 +14,10 @@ ENV JENKINS_HOME=/var/jenkins_home \
 RUN apt-get update \
     && apt-get install -y --no-install-recommends curl dumb-init git libltdl7 openssh-client \
     && rm -rf /var/lib/apt/lists/* \
+    # install git LFS
+    && curl -#LSo git-lfs.deb https://packagecloud.io/github/git-lfs/packages/debian/stretch/git-lfs_${git_lfs_version}_amd64.deb/download.deb \
+    && dpkg -i git-lfs.deb \
+    && rm -f git-lfs.deb \
     \
     # Jenkins is run with user `jenkins`, uid = 1000
     # If you bind mount a volume from the host or a data container,
