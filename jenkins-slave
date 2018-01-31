@@ -59,7 +59,8 @@ download_cli_jar
 }
 
 # make sure to delete node on exit
-trap 'jenkins_cli delete-node "$JENKINS_SLAVE_NAME" || true' EXIT INT TERM
+trap 'exit' SIGINT SIGTERM
+trap 'jenkins_cli delete-node "$JENKINS_SLAVE_NAME" || true' EXIT
 
 # create node, unless it's already exists
 jenkins_cli get-node "$JENKINS_SLAVE_NAME" &>/dev/null || {
