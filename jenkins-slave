@@ -54,6 +54,7 @@ download_cli_jar
 # allow docker cli to run as jenkins user
 [ -S "$DOCKER_SOCKET" ] && {
     DOCKER_GID=$(stat -c '%g' "$DOCKER_SOCKET")
+    groupdel $DOCKER_GROUP
     groupadd -for -g $DOCKER_GID $DOCKER_GROUP
     usermod -aG $DOCKER_GROUP $JENKINS_USER
 }
