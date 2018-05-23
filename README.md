@@ -1,6 +1,13 @@
-## Jenkins auto slave
+## Jenkins auto jnlp slave
 
-A docker image of Jenkins `JNLP` based agent. This image can self-register to Jenkins master, it will also unregister from the master when container exits. Another cool feature is that this image doesn't have `agent.jar` pre installed, instead it downloads it from Jenkins master when the container starts. This approach will help to avoid versioning problems that might happen between `master` and `slave`.
+This is a docker image forked from the fine work done [here](https://github.com/shamil/docker-jenkins-auto-slave).
+
+* Optimised for use within a kubernetes cluster and for use with [this master](https://github.com/microdc/k8s-jenkins)
+* `JNLP` based agent
+* Self-registers to Jenkins master
+* Unregister from the master when container exits
+* Downloads agent.jar from Jenkins master when the container starts. This avoids versioning problems.
+* Docker, aws cli and kubectl installed.  This allows for build, push, deploy within a Kubernetes cluster.
 
 ***
 
