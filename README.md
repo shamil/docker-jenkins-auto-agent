@@ -2,6 +2,8 @@
 
 This is a docker image forked from the fine work done [here](https://github.com/shamil/docker-jenkins-auto-slave).
 
+Available on [Dockerhub](https://hub.docker.com/r/microdc/jenkins-auto-jnlp-slave/)
+
 * Optimised for use within a kubernetes cluster and for use with [this master](https://github.com/microdc/k8s-jenkins)
 * `JNLP` based agent
 * Self-registers to Jenkins master
