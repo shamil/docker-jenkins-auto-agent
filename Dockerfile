@@ -6,7 +6,7 @@ ARG group=jenkins
 ARG uid=1000
 ARG gid=1000
 
-RUN apk --no-cache add curl dumb-init git openssh-client bash
+RUN apk --no-cache add curl dumb-init git openssh-client bash jq
 
 #Install Docker
 RUN apk --no-cache add shadow su-exec docker
