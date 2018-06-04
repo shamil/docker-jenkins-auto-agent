@@ -70,8 +70,10 @@ jenkins_cli get-node "$JENKINS_SLAVE_NAME" &>/dev/null || {
 }
 
 # run slave
-su $JENKINS_USER - -c \
-    "java $JAVA_OPTS -jar '$DOWNLOAD_DIR/slave.jar' -jnlpCredentials '$JENKINS_AUTH' -jnlpUrl '$JENKINS_URL/computer/$JENKINS_SLAVE_NAME/slave-agent.jnlp'"
+( su $JENKINS_USER - -c \
+  "java $JAVA_OPTS -jar '$DOWNLOAD_DIR/slave.jar' -jnlpCredentials '$JENKINS_AUTH' -jnlpUrl '$JENKINS_URL/computer/$JENKINS_SLAVE_NAME/slave-agent.jnlp'" ) &
+
+while curl -svm 5 "$JENKINS_URL" > /dev/null; do sleep 30; done
 
 # exit gracefully
 exit 0
