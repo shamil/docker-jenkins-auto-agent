@@ -6,13 +6,13 @@ ARG user=jenkins
 ARG group=jenkins
 ARG uid=1000
 ARG gid=1000
-ARG git_lfs_version=2.3.4
+ARG git_lfs_version=2.5.1
 
 ENV JENKINS_HOME=/var/jenkins_home \
     JENKINS_USER=${user}
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends curl dumb-init git libltdl7 openssh-client \
+    && apt-get install -y --no-install-recommends curl dumb-init git libltdl7 openssh-client procps \
     && rm -rf /var/lib/apt/lists/* \
     # install git LFS
     && curl -#LSo git-lfs.deb https://packagecloud.io/github/git-lfs/packages/debian/stretch/git-lfs_${git_lfs_version}_amd64.deb/download.deb \
