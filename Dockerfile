@@ -15,11 +15,11 @@ RUN [ ! -e /etc/nsswitch.conf ] && echo 'hosts: files dns' > /etc/nsswitch.conf
 #Install kubectl
 RUN curl -L -o /usr/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/v1.10.2/bin/linux/amd64/kubectl && chmod +x /usr/bin/kubectl
 
-#Install aws cli
-RUN apk --no-cache add groff procps python py-pip && \
-    pip install awscli==1.15.21 s3cmd==2.0.1
-
-
+#Install aws cli and azure cli
+RUN apk --no-cache add su-exec docker groff python py-pip gettext procps && \
+    apk --no-cache add --virtual=build gcc libffi-dev musl-dev openssl-dev python-dev python3-dev make && \
+    pip install awscli s3cmd azure-cli && \
+    apk del --purge build
 
 ENV JENKINS_HOME=/var/jenkins_home \
     JENKINS_USER=${user}
