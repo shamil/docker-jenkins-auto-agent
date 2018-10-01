@@ -18,6 +18,7 @@ RUN curl -L -o /usr/bin/kubectl https://storage.googleapis.com/kubernetes-releas
 #Install aws cli and azure cli
 RUN apk --no-cache add su-exec docker groff python py-pip gettext procps && \
     apk --no-cache add --virtual=build gcc libffi-dev musl-dev openssl-dev python-dev python3-dev make && \
+    pip install --upgrade pip==18.0 && \
     pip install awscli s3cmd azure-cli && \
     apk del --purge build
 
