@@ -16,11 +16,16 @@ RUN [ ! -e /etc/nsswitch.conf ] && echo 'hosts: files dns' > /etc/nsswitch.conf
 RUN curl -L -o /usr/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/v1.10.2/bin/linux/amd64/kubectl && chmod +x /usr/bin/kubectl
 
 #Install aws cli and azure cli
-RUN apk --no-cache add su-exec docker groff python py-pip gettext procps && \
+RUN apk --no-cache add su-exec docker groff python py-pip gettext procps xz && \
     apk --no-cache add --virtual=build gcc libffi-dev musl-dev openssl-dev python-dev python3-dev make && \
     pip install --upgrade pip==18.0 && \
-    pip install awscli s3cmd azure-cli && \
+    pip install awscli s3cmd azure-cli yamllint && \
     apk del --purge build
+
+# Install shellcheck for validating shell scripts in CI pipelines
+curl -o /tmp/shellcheck.tar.xz https://shellcheck.storage.googleapis.com/shellcheck-v0.5.0.linux.x86_64.tar.xz
+cd /tmp && tar xJf shellcheck.tar.xz
+cd shellcheck-* && mv shellcheck /usr/local/bin
 
 ENV JENKINS_HOME=/var/jenkins_home \
     JENKINS_USER=${user}
