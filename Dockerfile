@@ -1,12 +1,12 @@
 FROM openjdk:8-slim
 LABEL maintainer="Alex Simenduev <shamil.si@gmail.com>"
 
-# those are allowed to be changed at build time`
+# Those are allowed to be changed at build time
 ARG user=jenkins
 ARG group=jenkins
 ARG uid=1000
 ARG gid=1000
-ARG git_lfs_version=2.5.1
+ARG git_lfs_version=2.9.1
 
 ENV JENKINS_HOME=/var/jenkins_home \
     JENKINS_USER=${user}
@@ -14,7 +14,8 @@ ENV JENKINS_HOME=/var/jenkins_home \
 RUN apt-get update \
     && apt-get install -y --no-install-recommends curl dumb-init git libltdl7 openssh-client procps \
     && rm -rf /var/lib/apt/lists/* \
-    # install git LFS
+    \
+    # Install git LFS
     && curl -#LSo git-lfs.deb https://packagecloud.io/github/git-lfs/packages/debian/stretch/git-lfs_${git_lfs_version}_amd64.deb/download.deb \
     && dpkg -i git-lfs.deb \
     && rm -f git-lfs.deb \
@@ -27,14 +28,14 @@ RUN apt-get update \
     \
     # Tweak global SSH client configuration
     && sed -i '/^Host \*/a \ \ \ \ ServerAliveInterval 30' /etc/ssh/ssh_config \
-    && sed -i '/^Host \*/a \ \ \ \ StrictHostKeyChecking no' /etc/ssh/ssh_config
+    && sed -i '/^Host \*/a \ \ \ \ StrictHostKeyChecking no' /etc/ssh/ssh_config \
+    && sed -i '/^Host \*/a \ \ \ \ UserKnownHostsFile /dev/null' /etc/ssh/ssh_config
 
 # Jenkins home directory is a volume, so configuration and build history
 # can be persisted and survive image upgrades
 VOLUME $JENKINS_HOME
 
 COPY jenkins-slave /usr/local/bin/jenkins-slave
-RUN chmod +x /usr/local/bin/jenkins-slave
 
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 CMD ["/usr/local/bin/jenkins-slave"]

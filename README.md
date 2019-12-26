@@ -10,6 +10,8 @@ most used variables:
 
 - `JENKINS_AUTH` jenkins server username and either password or API token (in `user:secet` format)
 - `JENKINS_URL` jenkins master url (example `http://localhost:8080`)
+- `JENKINS_SLAVE_LABEL` space delimited labels, used to group agents into one logical group (no default)
+- `JENKINS_SLAVE_MODE` how Jenkins schedules builds on this node, `NORMAL/EXCLUSIVE` (default is `NORMAL`)
 - `JENKINS_SLAVE_NAME` the name which will be used when registering (default is `$HOSTNAME`)
 - `JENKINS_SLAVE_NUM_EXECUTORS` number of executors to use (defaults to `1`)
 
