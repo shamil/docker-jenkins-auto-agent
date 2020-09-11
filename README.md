@@ -37,6 +37,7 @@ The required permissions are:
 - `Agent/Connect`
 - `Agent/Create`
 - `Agent/Delete`
+- `Agent/ExtendedRead`
 
 ***
 
