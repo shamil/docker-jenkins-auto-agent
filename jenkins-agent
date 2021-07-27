@@ -43,7 +43,7 @@ which curl &>/dev/null || {
 [ -z "$JENKINS_URL" -o -z "$JENKINS_AUTH" ] && {
     echo "please set both JENKINS_URL and JENKINS_AUTH env. variables"
     echo "example:"
-    echo "  JENKINS_AUTH=user:password"
+    echo "  JENKINS_AUTH=user:token"
     echo "  JENKINS_URL=http://localhost:8080"
     exit 1
 }

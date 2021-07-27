@@ -1,4 +1,4 @@
-FROM openjdk:8-slim
+FROM openjdk:8-slim-buster
 LABEL maintainer="Alex Simenduev <shamil.si@gmail.com>"
 
 # Those are allowed to be changed at build time
@@ -6,7 +6,7 @@ ARG user=jenkins
 ARG group=jenkins
 ARG uid=1000
 ARG gid=1000
-ARG git_lfs_version=2.9.1
+ARG git_lfs_version=2.13.3
 
 ENV JENKINS_HOME=/var/jenkins_home \
     JENKINS_USER=${user}
@@ -35,7 +35,7 @@ RUN apt-get update \
 # can be persisted and survive image upgrades
 VOLUME $JENKINS_HOME
 
-COPY jenkins-slave /usr/local/bin/jenkins-slave
+COPY jenkins-agent /usr/local/bin/jenkins-agent
 
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
-CMD ["/usr/local/bin/jenkins-slave"]
+CMD ["/usr/local/bin/jenkins-agent"]
