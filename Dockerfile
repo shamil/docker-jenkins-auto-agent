@@ -1,4 +1,4 @@
-FROM openjdk:8-slim-buster
+FROM openjdk:11-slim-bullseye
 LABEL maintainer="Alex Simenduev <shamil.si@gmail.com>"
 
 # Those are allowed to be changed at build time
@@ -16,7 +16,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/* \
     \
     # Install git LFS
-    && curl -#LSo git-lfs.deb https://packagecloud.io/github/git-lfs/packages/debian/stretch/git-lfs_${git_lfs_version}_amd64.deb/download.deb \
+    && curl -#LSo git-lfs.deb https://packagecloud.io/github/git-lfs/packages/debian/buster/git-lfs_${git_lfs_version}_amd64.deb/download.deb \
     && dpkg -i git-lfs.deb \
     && rm -f git-lfs.deb \
     \
