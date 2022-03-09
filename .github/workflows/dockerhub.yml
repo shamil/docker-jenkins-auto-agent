@@ -22,4 +22,6 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         push: true
-        tags: simenduev/jenkins-auto-slave:${{ github.ref_name }}
+        tags: |
+          simenduev/jenkins-auto-slave:${{ github.ref_name }}
+          simenduev/jenkins-auto-slave:latest
