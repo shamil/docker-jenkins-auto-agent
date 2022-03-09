@@ -6,7 +6,7 @@ ARG user=jenkins
 ARG group=jenkins
 ARG uid=1000
 ARG gid=1000
-ARG git_lfs_version=2.13.3
+ARG git_lfs_version=3.1.2
 
 ENV JENKINS_HOME=/var/jenkins_home \
     JENKINS_USER=${user}
@@ -16,7 +16,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/* \
     \
     # Install git LFS
-    && curl -#LSo git-lfs.deb https://packagecloud.io/github/git-lfs/packages/debian/buster/git-lfs_${git_lfs_version}_amd64.deb/download.deb \
+    && curl -#LSo git-lfs.deb https://packagecloud.io/github/git-lfs/packages/debian/bullseye/git-lfs_${git_lfs_version}_amd64.deb/download.deb \
     && dpkg -i git-lfs.deb \
     && rm -f git-lfs.deb \
     \
