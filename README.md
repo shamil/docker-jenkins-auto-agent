@@ -11,14 +11,14 @@ A docker image of Jenkins `JNLP` based agent. This image can self-register to Je
 - `JENKINS_AUTH` jenkins server username and either password or API token (in `user:secet` format)
 - `JENKINS_URL` jenkins master url (example `http://localhost:8080`)
 - `JENKINS_AGENT_LABEL` space delimited labels, used to group agents into one logical group (no default)
-- `JENKINS_AGENT_MODE` how Jenkins schedules builds on this node, `NORMAL/EXCLUSIVE` (default is `NORMAL`)
-- `JENKINS_AGENT_NAME` the name which will be used when registering (default is `$HOSTNAME`)
+- `JENKINS_AGENT_MODE` how Jenkins schedules builds on this node, `NORMAL/EXCLUSIVE` (defaults to `NORMAL`)
+- `JENKINS_AGENT_NAME` the name which will be used when registering (defaults to `$HOSTNAME`)
 - `JENKINS_AGENT_NUM_EXECUTORS` number of executors to use (defaults to `1`)
 
 less used and can keep the defaults
 
 - `DOCKER_GROUP` the docker group name, should be same as the docker's host group (defaults to `docker`)
-- `DOCKER_SOCKET` the docker socket location (default is `/var/run/docker.sock`)
+- `DOCKER_SOCKET` the docker socket location (defaults to `/var/run/docker.sock`)
 - `JAVA_OPTS` pass java options to the `agent.jar` process (default is not set)
 - `JENKINS_AGENT_CONNECTION_MODE` the connection mode to use to connect to the jenkins's controller (defaults to `-http`)
 
