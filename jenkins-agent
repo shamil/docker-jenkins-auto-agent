@@ -12,6 +12,7 @@ DOWNLOAD_DIR=/usr/share/jenkins
 : ${JENKINS_AGENT_MODE:=NORMAL}
 : ${JENKINS_AGENT_NAME:=$HOSTNAME}
 : ${JENKINS_AGENT_NUM_EXECUTORS:=1}
+: ${JENKINS_AGENT_CONNECTION_MODE:=-http}
 
 JENKINS_AGENT_REMOTE_FS="$JENKINS_HOME"
 
@@ -25,7 +26,7 @@ download_cli_jar() {
 
 # a wrapper for jenkins_cli utility
 jenkins_cli() {
-    java -jar "$DOWNLOAD_DIR/cli.jar" -auth "$JENKINS_AUTH" "$@"
+    java -jar "$DOWNLOAD_DIR/cli.jar" "$JENKINS_AGENT_CONNECTION_MODE" -auth "$JENKINS_AUTH" "$@"
 }
 
 # not really used, we use 'jnlpCredentials' instead
