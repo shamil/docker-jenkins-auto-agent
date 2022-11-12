@@ -20,7 +20,7 @@ less used and can keep the defaults
 - `DOCKER_GROUP` the docker group name, should be same as the docker's host group (defaults to `docker`)
 - `DOCKER_SOCKET` the docker socket location (default is `/var/run/docker.sock`)
 - `JAVA_OPTS` pass java options to the `agent.jar` process (default is not set)
-- `JENKINS_AGENT_CONNECTION_MODE` the connection mode to use to connect to the jenkins's master (default `-http`). If jenkins is running behind a reverse proxy it is advisable to use `-webSocket` to avoid connection problems (for more details see https://www.jenkins.io/doc/book/managing/cli/)
+- `JENKINS_AGENT_CONNECTION_MODE` the connection mode to use to connect to the jenkins's controller (defaults to `-http`)
 
 ***
 
