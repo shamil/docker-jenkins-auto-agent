@@ -72,8 +72,11 @@ jenkins_cli get-node "$JENKINS_AGENT_NAME" &>/dev/null || {
     jenkins_cli create-node "$JENKINS_AGENT_NAME" <<< "$CONFIG"
 }
 
+# unexport potentially conflicting and sensitive variables
+export -n JENKINS_AUTH JENKINS_USER JENKINS_URL
+
 # run agent
-su $JENKINS_USER - -c \
+su $JENKINS_USER -c \
     "java $JAVA_OPTS -jar '$DOWNLOAD_DIR/agent.jar' -jnlpCredentials '$JENKINS_AUTH' -jnlpUrl '$JENKINS_URL/computer/$JENKINS_AGENT_NAME/jenkins-agent.jnlp'"
 
 # exit gracefully
