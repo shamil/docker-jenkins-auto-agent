@@ -26,7 +26,7 @@ download_cli_jar() {
 
 # a wrapper for jenkins_cli utility
 jenkins_cli() {
-    java -jar "$DOWNLOAD_DIR/cli.jar" "$JENKINS_AGENT_CONNECTION_MODE" -auth "$JENKINS_AUTH" "$@"
+    java -jar "$DOWNLOAD_DIR/cli.jar" $JENKINS_AGENT_CONNECTION_MODE -s $JENKINS_URL -auth "$JENKINS_AUTH" "$@"
 }
 
 # not really used, we use 'jnlpCredentials' instead
@@ -36,8 +36,13 @@ get_node_secret() {
         <<< "println jenkins.model.Jenkins.instance.nodesObject.getNode('$JENKINS_AGENT_NAME')?.computer?.jnlpMac"
 }
 
+which java &>/dev/null || {
+    echo "java is not in the PATH, make sure it's installed"
+    exit 1
+}
+
 which curl &>/dev/null || {
-    echo "please install curl"
+    echo "curl is not in the PATH, make sure it's installed"
     exit 1
 }
 
@@ -74,6 +79,9 @@ jenkins_cli get-node "$JENKINS_AGENT_NAME" &>/dev/null || {
 
 # unexport potentially conflicting and sensitive variables
 export -n JENKINS_AUTH JENKINS_USER JENKINS_URL
+
+# make sure we don't override variables when running su
+truncate -s0 /etc/environment
 
 # run agent
 su $JENKINS_USER -c \
