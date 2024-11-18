@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17-jre-jammy
+FROM eclipse-temurin:17-jre-noble
 LABEL maintainer="Alex Simenduev <shamil.si@gmail.com>"
 
 # Those are allowed to be changed at build time
@@ -6,19 +6,13 @@ ARG user=jenkins
 ARG group=jenkins
 ARG uid=1000
 ARG gid=1000
-ARG git_lfs_version=3.4.0
 
 ENV JENKINS_HOME=/var/jenkins_home \
     JENKINS_USER=${user}
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends dumb-init git libltdl7 openssh-client \
+    && apt-get install -y --no-install-recommends dumb-init git git-lfs libltdl7 openssh-client \
     && rm -rf /var/lib/apt/lists/* \
-    \
-    # Install git LFS
-    && curl -#LSo git-lfs.deb https://packagecloud.io/github/git-lfs/packages/debian/bullseye/git-lfs_${git_lfs_version}_amd64.deb/download.deb \
-    && dpkg -i git-lfs.deb \
-    && rm -f git-lfs.deb \
     \
     # Jenkins is run with user `jenkins`, uid = 1000
     # If you bind mount a volume from the host or a data container,
