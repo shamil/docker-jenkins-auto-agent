@@ -17,7 +17,8 @@ RUN apt-get update \
     # Jenkins is run with user `jenkins`, uid = 1000
     # If you bind mount a volume from the host or a data container,
     # ensure you use the same uid
-    && groupadd -g ${gid} ${group} \
+    && if id -u ${uid}; then userdel $(id -n -u ${uid}) ; fi \
+    && groupadd -f -g ${gid} ${group} \
     && useradd -d "$JENKINS_HOME" -u ${uid} -g ${gid} -m -s /bin/bash ${user} \
     \
     # Tweak global SSH client configuration
