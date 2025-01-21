@@ -10,6 +10,9 @@ ARG gid=1000
 ENV JENKINS_HOME=/var/jenkins_home \
     JENKINS_USER=${user}
 
+# Remove the built-in `ubuntu` user and group to restore a clean state
+RUN userdel -fr ubuntu
+
 RUN apt-get update \
     && apt-get install -y --no-install-recommends dumb-init git git-lfs libltdl7 openssh-client \
     && rm -rf /var/lib/apt/lists/* \
@@ -17,7 +20,6 @@ RUN apt-get update \
     # Jenkins is run with user `jenkins`, uid = 1000
     # If you bind mount a volume from the host or a data container,
     # ensure you use the same uid
-    && if id -u ${uid}; then userdel $(id -n -u ${uid}) ; fi \
     && groupadd -f -g ${gid} ${group} \
     && useradd -d "$JENKINS_HOME" -u ${uid} -g ${gid} -m -s /bin/bash ${user} \
     \
