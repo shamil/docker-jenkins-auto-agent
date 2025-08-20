@@ -1,0 +1,7 @@
+#!/bin/bash
+if [ "$1" == "top" ]; then
+  echo "WARN: The command 'docker top' is not supported in this container version, skipping..."
+  exit 0
+else
+  exec docker-orig "$@"
+fi

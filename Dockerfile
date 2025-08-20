@@ -14,9 +14,17 @@ ENV JENKINS_HOME=/var/jenkins_home \
 RUN userdel -fr ubuntu
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends dumb-init git git-lfs libltdl7 openssh-client \
+    && apt-get install -y --no-install-recommends dumb-init git git-lfs libltdl7 openssh-client ca-certificates \
     && rm -rf /var/lib/apt/lists/* \
-    \
+    # Install docker
+    && install -m 0755 -d /etc/apt/keyrings \
+    && curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc \
+    && chmod a+r /etc/apt/keyrings/docker.asc \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+      tee /etc/apt/sources.list.d/docker.list > /dev/null \
+    && apt-get update \
+    # Only the docker-ce-cli is required since the other components are externally provided
+    && apt-get install -y docker-ce-cli \
     # Jenkins is run with user `jenkins`, uid = 1000
     # If you bind mount a volume from the host or a data container,
     # ensure you use the same uid
@@ -33,6 +41,9 @@ RUN apt-get update \
 VOLUME $JENKINS_HOME
 
 COPY jenkins-agent /usr/local/bin/jenkins-agent
+RUN mv /usr/bin/docker /usr/bin/docker-orig
+COPY docker /usr/bin/docker
+RUN chmod +x /usr/bin/docker
 
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 CMD ["/usr/local/bin/jenkins-agent"]

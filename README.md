@@ -64,10 +64,11 @@ $ docker run -d \
     -v /any/path/you/like:/var/jenkins_home \
     simenduev/jenkins-auto-slave
 ```
+The equivalent docker compose example can be found at [jenkins-without-docker](examples/jenkins-without-docker)
 
 > Mounting of `/var/jenkins_home` volume is required in order for agent to be able to build jobs.
 
-below command will also permit the agent run docker commands:
+The below command will also permit the agent to run docker commands with host provided docker:
 
 ```sh
 $ docker run -d \
@@ -79,3 +80,6 @@ $ docker run -d \
     -v /usr/bin/docker:/usr/bin/docker \
     simenduev/jenkins-auto-slave
 ```
+The equivalent docker compose example can be found at [jenkins-with-host-provided-docker](examples/jenkins-with-host-provided-docker)
+
+You can also run docker in docker (dind) in a rootless container without exposing the host docker.sock see [jenkins-with-dind-rootless](examples/jenkins-with-dind-rootless)

@@ -1,0 +1,17 @@
+---
+services:
+  slave:
+    image: simenduev/jenkins-auto-slave:latest
+    container_name: "jenkins_slave"
+    restart: unless-stopped
+    depends_on:
+      - docker
+    volumes:
+      - '/etc/localtime:/etc/localtime:ro'
+      - './data/jenkins/slave:/var/jenkins_home'
+    environment:
+      JENKINS_URL: "https://jenkins.internal.domain"
+      JENKINS_AGENT_CONNECTION_MODE: -webSocket
+      JENKINS_AGENT_NAME: "builder"
+      JENKINS_AUTH: "registrator:1234567890123456789012"
+      JENKINS_AGENT_NUM_EXECUTORS: "2"
