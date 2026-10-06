@@ -1,4 +1,4 @@
-FROM eclipse-temurin:21-jre-noble
+FROM eclipse-temurin:25-jre-noble
 LABEL maintainer="Alex Simenduev <shamil.si@gmail.com>"
 
 # Those are allowed to be changed at build time
