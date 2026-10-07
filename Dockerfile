@@ -14,7 +14,7 @@ ENV JENKINS_HOME=/var/jenkins_home \
 RUN userdel -fr ubuntu
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends dumb-init git git-lfs libltdl7 openssh-client \
+    && apt-get install -y --no-install-recommends curl dumb-init git git-lfs libltdl7 openssh-client \
     && rm -rf /var/lib/apt/lists/* \
     \
     # Jenkins is run with user `jenkins`, uid = 1000
